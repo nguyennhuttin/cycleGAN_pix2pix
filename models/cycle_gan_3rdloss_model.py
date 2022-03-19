@@ -55,16 +55,20 @@ class CycleGAN3rdlossModel(BaseModel):
             opt (Option class)-- stores all the experiment flags; needs to be a subclass of BaseOptions
         """
         BaseModel.__init__(self, opt)
+        
         # specify the training losses you want to print out. The training/test scripts will call <BaseModel.get_current_losses>
         self.loss_names = ['D_A', 'G_A', 'D', 'cycle_A',
                            'idt_A', 'D_B', 'G_B', 'cycle_B', 'idt_B']
         # specify the images you want to save/display. The training/test scripts will call <BaseModel.get_current_visuals>
-        visual_names_A = ['real_A', 'fake_B', 'rec_A']
-        visual_names_B = ['real_B', 'fake_A', 'rec_B']
+        # visual_names_A = ['real_A', 'fake_B', 'rec_A']
+        # visual_names_B = ['real_B', 'fake_A', 'rec_B']
+        visual_names_A = ['fake_B']
+        visual_names_B = ['real_B', 'rec_B']
         # if identity loss is used, we also visualize idt_B=G_A(B) ad idt_A=G_A(B)
         if self.isTrain and self.opt.lambda_identity > 0.0:
             visual_names_A.append('idt_B')
             visual_names_B.append('idt_A')
+            self.skip=0
 
         # combine visualizations for A and B
         self.visual_names = visual_names_A + visual_names_B
@@ -125,10 +129,23 @@ class CycleGAN3rdlossModel(BaseModel):
 
     def forward(self):
         """Run forward pass; called by both functions <optimize_parameters> and <test>."""
-        self.fake_B = self.netG_A(self.real_A)  # G_A(A)
-        self.rec_A = self.netG_B(self.fake_B)   # G_B(G_A(A))
-        self.fake_A = self.netG_B(self.real_B)  # G_B(B)
-        self.rec_B = self.netG_A(self.fake_A)   # G_A(G_B(B))
+        if self.opt.concat == True and self.opt.batch_size > 1:
+            a1, a2, a3, a4 = self.real_A.shape
+            if a1*a2!=3*self.opt.batch_size:
+                self.skip=1
+            else:
+                self.skip=0
+
+            self.real_A = self.real_A.reshape((a1*a2, a3, a4)).unsqueeze(0)
+            # b1, b2, b3, b4 = data['B'].shape
+            self.real_B = self.real_B#[torch.randint(0,opt.batch_size,(1,)),:] # bs,3,b3,b4
+            print('Aconcat:',self.real_A.shape)
+            print('Bconcat:',self.real_B.shape)
+        if self.skip==0:
+            self.fake_B = self.netG_A(self.real_A)  # G_A(A)
+            self.rec_A = self.netG_B(self.fake_B)   # G_B(G_A(A))
+            self.fake_A = self.netG_B(self.real_B)  # G_B(B)
+            self.rec_B = self.netG_A(self.fake_A)   # G_A(G_B(B))
 
     def backward_D_basic(self, netD, real, fake):
         """Calculate GAN loss for the discriminator
@@ -156,11 +173,16 @@ class CycleGAN3rdlossModel(BaseModel):
         """Calculate GAN loss for the discriminator"""
         # Fake; stop backprop to the generator by detaching fake_B
         # we use conditional GANs; we need to feed both input and output to the discriminator
-        fake_AB = torch.cat((self.real_A, self.fake_B), 1)
+        fake_AB = torch.cat((self.real_A, self.fake_B), 1) # real_A 1,15,a3,a4 fake_A 5,15,a3,a4 real_B 5,3,b3,b4, fake_B 1,3,b3,b4
         pred_fake = self.netD(fake_AB.detach())
         self.loss_D_fake = self.criterionGAN(pred_fake, False)
         # Real
-        real_AB = torch.cat((self.real_A, self.real_B), 1)
+        if self.opt.concat == True and self.opt.batch_size > 1:
+            temp_real_B = self.real_B[torch.randint(0,self.opt.batch_size,(1,)),:]
+        else:
+            temp_real_B=self.real_B
+
+        real_AB = torch.cat((self.real_A, temp_real_B), 1)
         pred_real = self.netD(real_AB)
         self.loss_D_real = self.criterionGAN(pred_real, True)
         # combine loss and calculate gradients
@@ -217,14 +239,15 @@ class CycleGAN3rdlossModel(BaseModel):
         self.forward()      # compute fake images and reconstruction images.
         # G_A and G_B
         # Ds require no gradients when optimizing Gs
-        self.set_requires_grad([self.netD_A, self.netD_B], False)
-        self.optimizer_G.zero_grad()  # set G_A and G_B's gradients to zero
-        self.backward_G()             # calculate gradients for G_A and G_B
-        self.optimizer_G.step()       # update G_A and G_B's weights
-        # D_A and D_B
-        self.set_requires_grad([self.netD_A, self.netD_B], True)
-        self.optimizer_D.zero_grad()   # set D_A and D_B's gradients to zero
-        self.backward_D_A()      # calculate gradients for D_A
-        self.backward_D_B()      # calculate graidents for D_B
-        self.backward_D()
-        self.optimizer_D.step()  # update D_A and D_B's weights
+        if self.skip==0:
+            self.set_requires_grad([self.netD_A, self.netD_B], False)
+            self.optimizer_G.zero_grad()  # set G_A and G_B's gradients to zero
+            self.backward_G()             # calculate gradients for G_A and G_B
+            self.optimizer_G.step()       # update G_A and G_B's weights
+            # D_A and D_B
+            self.set_requires_grad([self.netD_A, self.netD_B], True)
+            self.optimizer_D.zero_grad()   # set D_A and D_B's gradients to zero
+            self.backward_D_A()      # calculate gradients for D_A
+            self.backward_D_B()      # calculate graidents for D_B
+            self.backward_D()
+            self.optimizer_D.step()  # update D_A and D_B's weights

@@ -1,0 +1,6 @@
+create web directory ./checkpoints/concatCG3rdloss/web...
+learning rate 0.0002000 -> 0.0002000
+/fs02/zd26/collage_main/Tin2/cycleGAN_pix2pix/.venv/lib/python3.7/site-packages/torch/optim/lr_scheduler.py:136: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  "https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate", UserWarning)
+/fs02/zd26/collage_main/Tin2/cycleGAN_pix2pix/.venv/lib/python3.7/site-packages/PIL/Image.py:946: UserWarning: Palette images with Transparency expressed in bytes should be converted to RGBA images
+  "Palette images with Transparency expressed in bytes should be "

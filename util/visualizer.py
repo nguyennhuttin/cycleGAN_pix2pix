@@ -138,7 +138,18 @@ class Visualizer():
                 images = []
                 idx = 0
                 for label, image in visuals.items():
+                    print('show all the images in one visdom panel')
+                    # print('tensor_visual:',image.shape)
                     image_numpy = util.tensor2im(image)
+                    # print('image_numpy_visual:',image.shape)
+                    print('label & image_numpy:',label, image_numpy.shape)
+
+                    #################################################################
+                    #################################################################
+                    # if image_numpy.shape[2]!=3:
+                    #         image_numpy=image_numpy.reshape((image_numpy.shape[0],image_numpy.shape[1],3,self.opt.batch_size))
+
+                    ###############
                     label_html_row += '<td>%s</td>' % label
                     images.append(image_numpy.transpose([2, 0, 1]))
                     idx += 1
@@ -154,6 +165,11 @@ class Visualizer():
                 if label_html_row != '':
                     label_html += '<tr>%s</tr>' % label_html_row
                 try:
+                    # Given a 4D tensor of shape (B x C x H x W),
+                    # or a list of images all of the same size,
+                    # makes a grid of images of size (B / nrow, nrow)
+                    print('len_images:',len(images))
+                    print('shape of each image:',[images[x].shape for x in range(len(images))])
                     self.vis.images(images, nrow=ncols, win=self.display_id + 1,
                                     padding=2, opts=dict(title=title + ' images'))
                     label_html = '<table>%s</table>' % label_html
@@ -167,6 +183,13 @@ class Visualizer():
                 try:
                     for label, image in visuals.items():
                         image_numpy = util.tensor2im(image)
+########################################################
+#########################################################
+                        print('show all the images in one visdom panel')
+                        print('label & image_numpy:',label, image_numpy.shape)
+                        # if image_numpy.shape[1]!=3:
+                        #     image_numpy=image_numpy.reshape((self.opt.batch_size,3,image_numpy.shape[2],image_numpy.shape[3]))
+                        
                         self.vis.image(image_numpy.transpose([2, 0, 1]), opts=dict(title=label),
                                        win=self.display_id + idx)
                         idx += 1

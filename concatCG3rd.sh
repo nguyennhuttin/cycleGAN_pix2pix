@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --account=zd26
-#SBATCH --job-name=cycle_gan_3rdloss_wandb
+#SBATCH --job-name=concatCG3rdloss
 #SBATCH --time=48:00:00
 #SBATCH --gres=gpu:2
 #SBATCH --partition=desktop
@@ -10,12 +10,12 @@
 #SBATCH --mail-user=tinplay41@gmail.com
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-type=END
-#SBATCH --output=/fs02/zd26/collage_main/Tin/pytorch-CycleGAN-and-pix2pix/output_folder/sbatch_out.out
-#SBATCH --error=/fs02/zd26/collage_main/Tin/pytorch-CycleGAN-and-pix2pix/output_folder/sbatch_err.err
+#SBATCH --output=/fs02/zd26/collage_main/Tin2/cycleGAN_pix2pix/output_folder/sbatch_out.out
+#SBATCH --error=/fs02/zd26/collage_main/Tin2/cycleGAN_pix2pix/output_folder/sbatch_err.err
 
 
 # A script to monitor gpu and cpu usage for arbitrary commands (Python flavour?) 
-pathToRepo=/fs02/zd26/collage_main/Tin/pytorch-CycleGAN-and-pix2pix/
+pathToRepo=/fs02/zd26/collage_main/Tin2/cycleGAN_pix2pix/
 # Define BASH functions for monitoring 
 
 echo 'train pix-to-pix'
@@ -28,8 +28,8 @@ pip install -r requirements.txt
 echo $(which python3)
 
 cd $pathToRepo
-wandb login 4e12773a4724334345ecccf11dcf4d485280365e #myAPI
-python train.py --dataroot ./datasets/collage_testing --name CG3rdloss_wandb --model cycle_gan_3rdloss --direction AtoB --dataset_mode unaligned  --use_wandb --continue_train --lr_decay_iters 10 --concat --batch_size 5
+# wandb login 4e12773a4724334345ecccf11dcf4d485280365e #myAPI
+python train.py --dataroot ./datasets/collage_testing --name concatCG3rdloss --model cycle_gan_3rdloss --direction AtoB --dataset_mode unaligned  --use_wandb  --lr_decay_iters 10 --concat --batch_size 5 --input_nc 15 --lambda_identity 0 
 
 
 echo 'Run finished!'
