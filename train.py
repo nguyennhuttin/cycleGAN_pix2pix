@@ -55,7 +55,7 @@ if __name__ == '__main__':
                 t_data = iter_start_time - iter_data_time
             if opt.concat == True and opt.batch_size > 1:
                 d1, d2, d3, d4 = data.shape
-                data = data.reshape((d1*d2, d3, d4))
+                data = data.reshape((d1*d2, d3, d4)).unsqueeze(0)
                 print(data.shape)
             total_iters += opt.batch_size
             epoch_iter += opt.batch_size
