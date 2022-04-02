@@ -139,8 +139,8 @@ class CycleGAN3rdlossModel(BaseModel):
             self.real_A = self.real_A.reshape((a1*a2, a3, a4)).unsqueeze(0)
             # b1, b2, b3, b4 = data['B'].shape
             self.real_B = self.real_B#[torch.randint(0,opt.batch_size,(1,)),:] # bs,3,b3,b4
-            print('Aconcat:',self.real_A.shape)
-            print('Bconcat:',self.real_B.shape)
+            # print('Aconcat:',self.real_A.shape)
+            # print('Bconcat:',self.real_B.shape)
         if self.skip==0:
             self.fake_B = self.netG_A(self.real_A)  # G_A(A)
             self.rec_A = self.netG_B(self.fake_B)   # G_B(G_A(A))

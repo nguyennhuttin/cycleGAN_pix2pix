@@ -1,0 +1,27 @@
+/fs02/zd26/collage_main/Tin2/cycleGAN_pix2pix/.venv/lib/python3.7/site-packages/torch/optim/lr_scheduler.py:136: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  "https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate", UserWarning)
+create web directory ./checkpoints/concatCG3rdloss/web...
+learning rate 0.0000020 -> 0.0000020
+/fs02/zd26/collage_main/Tin2/cycleGAN_pix2pix/.venv/lib/python3.7/site-packages/PIL/Image.py:946: UserWarning: Palette images with Transparency expressed in bytes should be converted to RGBA images
+  "Palette images with Transparency expressed in bytes should be "
+/fs02/zd26/collage_main/Tin2/cycleGAN_pix2pix/.venv/lib/python3.7/site-packages/PIL/Image.py:946: UserWarning: Palette images with Transparency expressed in bytes should be converted to RGBA images
+  "Palette images with Transparency expressed in bytes should be "
+/fs02/zd26/collage_main/Tin2/cycleGAN_pix2pix/.venv/lib/python3.7/site-packages/PIL/Image.py:946: UserWarning: Palette images with Transparency expressed in bytes should be converted to RGBA images
+  "Palette images with Transparency expressed in bytes should be "
+/fs02/zd26/collage_main/Tin2/cycleGAN_pix2pix/.venv/lib/python3.7/site-packages/PIL/Image.py:946: UserWarning: Palette images with Transparency expressed in bytes should be converted to RGBA images
+  "Palette images with Transparency expressed in bytes should be "
+(epoch: 1, iters: 100, time: 0.188, data: 1.845) D_A: 0.028 G_A: 0.795 D: 0.000 cycle_A: 1.599 idt_A: 0.000 D_B: 0.024 G_B: 0.702 cycle_B: 0.280 idt_B: 0.000
+(epoch: 1, iters: 200, time: 0.191, data: 0.003) D_A: 0.026 G_A: 0.827 D: 0.001 cycle_A: 1.185 idt_A: 0.000 D_B: 0.032 G_B: 0.629 cycle_B: 0.393 idt_B: 0.000
+(epoch: 1, iters: 300, time: 0.193, data: 0.005) D_A: 0.017 G_A: 1.071 D: 0.000 cycle_A: 1.706 idt_A: 0.000 D_B: 0.031 G_B: 0.598 cycle_B: 0.399 idt_B: 0.000
+show all the images in one visdom panel
+label & image_numpy: fake_B (256, 256, 3)
+show all the images in one visdom panel
+label & image_numpy: real_B (256, 256, 3)
+show all the images in one visdom panel
+label & image_numpy: rec_B (256, 256, 3)
+len_images: 3
+shape of each image: [(3, 256, 256), (3, 256, 256), (3, 256, 256)]
+vim shape: (3, 3, 256, 256)
+after mod vim shape: (3, 3, 256, 256)
+(epoch: 1, iters: 400, time: 0.590, data: 0.002) D_A: 0.020 G_A: 0.714 D: 0.000 cycle_A: 1.989 idt_A: 0.000 D_B: 0.154 G_B: 0.588 cycle_B: 0.249 idt_B: 0.000
+(epoch: 1, iters: 500, time: 0.197, data: 0.006) D_A: 0.015 G_A: 0.616 D: 0.001 cycle_A: 1.414 idt_A: 0.000 D_B: 0.177 G_B: 0.592 cycle_B: 0.343 idt_B: 0.000
