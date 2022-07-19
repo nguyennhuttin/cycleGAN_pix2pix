@@ -92,6 +92,8 @@ class BaseOptions():
         # concat
         parser.add_argument('--concat', action='store_true',
                             help='concat tool images')
+        parser.add_argument('--drop_last', action='store_true',
+                            help='drop the batch that does not have correct size')
         return parser
 
     def gather_options(self):
